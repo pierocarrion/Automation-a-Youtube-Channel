@@ -18,13 +18,11 @@ API - Obtain Video Urls From Reddit
 API - Download Videos
 ```sh
     GET: http://localhost:5000/api/v1/video/download
-        
 ```
 
 API - Concat Videos
 ```sh
     GET: http://localhost:5000/api/v1/video/concat
-        
 ```
 
 API - Upload Video To Youtube
@@ -38,5 +36,4 @@ API - Upload Video To Youtube
             "category":"22",
             "privacy" :"public"
         }
-        
 ```

@@ -1,6 +1,7 @@
 node_modules/
 temp/result/*
 temp/videos/*
+temp/cut/*
 src/scripts/client_secrets.json
 src/scripts/upload_video.py-oauth2.json
 block.txt
