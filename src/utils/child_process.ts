@@ -10,11 +10,18 @@ export async function ChildProcess(command: string, argsChildProcess: any) {
             
             child.stdout.on('data', (data: any) => {
                 console.log('stdout: ' + data);
+                
             });
 
             child.stderr.on('data', (code: any) => {
-                console.log('stderr: ' + code);
-                resolve('Finished process =>' + code);
+                //console.log('stderr: ' + code);
+                
+                //resolve(false);
+            });
+            child.on('exit', (code: any) => {
+                console.log("🚀 ~ file: child_process.ts ~ line 21 ~ child.stderr.on ~ code", code)
+                
+                resolve(true);
             });
 
             child.on('error', (code: any) => {
@@ -22,7 +29,7 @@ export async function ChildProcess(command: string, argsChildProcess: any) {
             });
 
             child.on('message', (code: any) => {
-                console.log('Message from the child process =>' + code);
+                //console.log('Message from the child process =>' + code);
             });
         });
     } catch (error) {

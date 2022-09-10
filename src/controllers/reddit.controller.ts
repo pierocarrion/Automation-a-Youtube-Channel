@@ -28,12 +28,22 @@ class RedditController {
     }
     async saveUrls(urls: string[]){
         try{
-            urls.map(async url=>{
-                const redditVideoInserted = await RedditVideoModel.insertMany([{
-                    videoUrl : url,
-                    processed: false
-                }])
-                console.log("🚀 ~ file: reddit.controller.ts ~ line 44 ~ RedditController ~ saveUrls ~ inserted", redditVideoInserted)
+            return new Promise(async (resolve, reject)=>{
+                
+                try{
+                    const redditVideoInserted = await RedditVideoModel.insertMany(
+                        urls.map(async url=>{
+                            return {
+                                videoUrl : url,
+                            processed: false    
+                            }
+                        }));
+                        console.log("🚀 ~ file: reddit.controller.ts ~ line 44 ~ RedditController ~ saveUrls ~ inserted", redditVideoInserted)
+                    
+                    return resolve(true)
+                }catch(error){
+                    return reject(false)
+                }
             })
         }catch(error){
             console.log("🚀 ~ file: reddit.controller.ts ~ line 34 ~ RedditController ~ saveUrls ~ error", error)

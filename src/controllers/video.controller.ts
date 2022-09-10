@@ -6,18 +6,21 @@ import { ChildProcess } from "../utils/child_process";
 import { randomIntegerFromInterval } from "../utils/functions";
 
 class VideoController {
-  constructor() {}
+  constructor() { }
   async execute() {
     try {
       await this.deleteVideosFromFolder(PATH.VIDEO_DOWNLOADED + "/");
       await this.deleteVideosFromFolder(PATH.VIDEO_CUT + "/");
+
       const redditVideo = await this.getVideos();
+      /*
       console.log(
         "🚀 ~ file: video.controller.ts ~ line 22 ~ VideoController ~ execute ~ urlVideos",
         redditVideo,
         typeof redditVideo
       );
-      await this.downloadVideos(redditVideo);
+      */
+      //await this.downloadVideos(redditVideo);
     } catch (error) {
       console.log(
         "🚀 ~ file: video.controller.ts ~ line 23 ~ VideoController ~ execute ~ error",
@@ -27,23 +30,31 @@ class VideoController {
     }
   }
 
-  async downloadVideos(redditVideos: any[]) {
+  async downloadVideos(redditVideos: string[]) {
     try {
       //youtube-dl https://v.redd.it/e9gp5ll6jbh91 -o "krowdy/%(title)s-%(id)s.%(ext)s"
-      redditVideos.map(async (redditVideo) => {
-        console.log(
-          "🚀 ~ file: video.controller.ts ~ line 78 ~ VideoController ~ urlVideos.map ~ url",
-          redditVideo
-        );
 
-        let args = [
-          `${redditVideo[1]}`,
-          `-o "${PATH.VIDEO_DOWNLOADED}/${uuid4()}.%(ext)s"`,
-        ];
+      this.deleteVideosFromFolder(PATH.VIDEO_DOWNLOADED + "/");
+      this.deleteVideosFromFolder(PATH.VIDEO_CUT + "/");
+      return Promise.all(
 
-        await this.updateVideoInDatabase(redditVideo[0]);
-        await ChildProcess("youtube-dl", args);
-      });
+        redditVideos.map((redditVideo) => {
+          console.log(
+            "🚀 ~ file: video.controller.ts ~ line 78 ~ VideoController ~ urlVideos.map ~ url",
+            redditVideo
+          );
+
+          let args = [
+            `${redditVideo}`,
+            `-o "${PATH.VIDEO_DOWNLOADED}/${uuid4()}.%(ext)s"`,
+          ];
+
+          //await this.updateVideoInDatabase(redditVideo[0]);
+          return ChildProcess("youtube-dl", args);
+        })
+
+      );
+
     } catch (error) {
       console.log(
         "🚀 ~ file: video.controller.ts ~ line 20 ~ VideoController ~ downloadVideos ~ error",
@@ -56,9 +67,10 @@ class VideoController {
     try {
       const pathDirectory = PATH.VIDEO_DOWNLOADED + "/";
       const files = await fs.promises.readdir(pathDirectory);
-      files.map(async (file) => {
-        await this.cutVideo(PATH.VIDEO_CUT,pathDirectory + file, file);
-      });
+
+      return Promise.all(files.map((file) => {
+        return this.cutVideo(PATH.VIDEO_CUT, pathDirectory + file, file);
+      }));
     } catch (error) {
       console.log(
         "🚀 ~ file: video.controller.ts ~ line 53 ~ VideoController ~ cutVideos ~ error",
@@ -69,19 +81,21 @@ class VideoController {
   }
   async cutVideo(pathDirectoryOutput: string, videoSrc: any, nameVideo: string) {
     try {
-      var startTime = "00:00:00";
-      var endTime = `00:00:${randomIntegerFromInterval(10,20)}`;
-      let args = [
-        "-y",
-        "-i",
-        videoSrc,
-        `-threads 6`,
-        `-ss ${startTime}`,
-        `-to ${endTime}`,
-        "-async 1",
-        `${pathDirectoryOutput}/cut-${nameVideo}`,
-      ];
-      await ChildProcess("ffmpeg", args);
+      return new Promise((resolve, reject) => {
+        var startTime = "00:00:00";
+        var endTime = `00:00:${randomIntegerFromInterval(10, 20)}`;
+        let args = [
+          "-y",
+          "-i",
+          videoSrc,
+          `-threads 6`,
+          `-ss ${startTime}`,
+          `-to ${endTime}`,
+          "-async 1",
+          `${pathDirectoryOutput}/cut-${nameVideo}`,
+        ];
+        resolve(ChildProcess("ffmpeg", args));
+      });
     } catch (error) {
       console.log(
         "🚀 ~ file: video.controller.ts ~ line 65 ~ VideoController ~ cutVideo ~ error",
@@ -92,7 +106,7 @@ class VideoController {
   }
   async deleteVideosFromFolder(pathVideos: string) {
     try {
-        console.log(pathVideos)
+      console.log(pathVideos)
       await fs.promises
         .readdir(pathVideos)
         .then((f) =>
@@ -110,40 +124,43 @@ class VideoController {
   }
   async concatVideos() {
     try {
-        const files = await fs.promises.readdir(PATH.VIDEO_DOWNLOADED + "/");
-        console.log("Tiempo de espera: " + files.length * 10 * 1000)
-        await this.cutVideos();
-        setTimeout(async()=>{
-            console.log("SET TIMEOUT")
-            const files = await fs.promises.readdir(PATH.VIDEO_CUT + "/");
-            await this.createFileWithVideos(files);
-            let args = [
-                "-f",
-                "concat",
-                "-safe 0",
-                "-i",
-                `"${PATH.TEMP_FILES}/${FILE_NAME.RAW_VIDEOS_TXT}"`,
-                `${PATH.RESULT_VIDEO}/result.mp4`,
-                "-y",
-            ];
-            await ChildProcess('ffmpeg',args)
-        }, files.length * 8 * 1000)
+      //const files = await fs.promises.readdir(PATH.VIDEO_DOWNLOADED + "/");
+
+      const files = await fs.promises.readdir(PATH.VIDEO_CUT + "/");
+      const result = await this.createFileWithVideos(files)
+      if(result){
+        return new Promise((resolve, reject) => {
+          let args = [
+            "-f",
+            "concat",
+            "-safe 0",
+            "-i",
+            `"${PATH.TEMP_FILES}/${FILE_NAME.RAW_VIDEOS_TXT}"`,
+            `${PATH.RESULT_VIDEO}/result.mp4`,
+            "-y",
+          ];
+          resolve(ChildProcess('ffmpeg', args))
+        })
+      }
     } catch (error) {
       throw error;
     }
   }
   async createFileWithVideos(files: string[]) {
     try {
-      var stream = fs.createWriteStream(
-        PATH.TEMP_FILES + "/" + FILE_NAME.RAW_VIDEOS_TXT
-      );
-      stream.once("open", function (fd) {
-        files.map((file) => {
+      return new Promise(async (resolve, reject) => {
+        var stream = fs.createWriteStream(
+          PATH.TEMP_FILES + "/" + FILE_NAME.RAW_VIDEOS_TXT
+        );
+        stream.once("open", function (fd) {
+          files.map((file) => {
             stream.write(`file '${PATH.VIDEO_CUT}/${file}'` + "\n");
+          });
+          stream.end();
         });
-        stream.end();
-      });
-      console.log("Created File: .txt");
+        resolve(true);
+      })
+
     } catch (error) {
       console.log(
         "🚀 ~ file: video.controller.ts ~ line 133 ~ VideoController ~ createFileWithVideos ~ error",
