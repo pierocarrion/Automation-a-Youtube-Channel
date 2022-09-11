@@ -7,28 +7,6 @@ import { randomIntegerFromInterval } from "../utils/functions";
 
 class VideoController {
   constructor() { }
-  async execute() {
-    try {
-      await this.deleteVideosFromFolder(PATH.VIDEO_DOWNLOADED + "/");
-      await this.deleteVideosFromFolder(PATH.VIDEO_CUT + "/");
-
-      const redditVideo = await this.getVideos();
-      /*
-      console.log(
-        "🚀 ~ file: video.controller.ts ~ line 22 ~ VideoController ~ execute ~ urlVideos",
-        redditVideo,
-        typeof redditVideo
-      );
-      */
-      //await this.downloadVideos(redditVideo);
-    } catch (error) {
-      console.log(
-        "🚀 ~ file: video.controller.ts ~ line 23 ~ VideoController ~ execute ~ error",
-        error
-      );
-      throw error;
-    }
-  }
 
   async downloadVideos(redditVideos: string[]) {
     try {
@@ -48,8 +26,6 @@ class VideoController {
             `${redditVideo}`,
             `-o "${PATH.VIDEO_DOWNLOADED}/${uuid4()}.%(ext)s"`,
           ];
-
-          //await this.updateVideoInDatabase(redditVideo[0]);
           return ChildProcess("youtube-dl", args);
         })
 
@@ -124,8 +100,6 @@ class VideoController {
   }
   async concatVideos() {
     try {
-      //const files = await fs.promises.readdir(PATH.VIDEO_DOWNLOADED + "/");
-
       const files = await fs.promises.readdir(PATH.VIDEO_CUT + "/");
       const result = await this.createFileWithVideos(files)
       if(result){
@@ -169,7 +143,10 @@ class VideoController {
       throw error;
     }
   }
-  async getVideos() {
+
+
+
+  async getVideosFromDatabase() {
     try {
       const redditVideoFiltered = RedditVideoModel.find({
         processed: false,

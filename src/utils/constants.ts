@@ -16,10 +16,12 @@ export const PATH = {
     VIDEO_DOWNLOADED: `${ROOT_DIR}/temp/videos`,
     VIDEO_CUT: `${ROOT_DIR}/temp/cut`,
     RESULT_VIDEO: `${ROOT_DIR}/temp/result`,
+    THUMB_VIDEO:`${ROOT_DIR}/temp/thumb`,
     TEMP_FILES: `${ROOT_DIR}/temp`,
-    SCRIPT_YOUTUBE_UPLOAD_VIDEO: `${ROOT_DIR}/src/scripts`
+    SCRIPT_YOUTUBE_UPLOAD_VIDEO: `${ROOT_DIR}/src/scripts`,
+    TOKENS: `${ROOT_DIR}/src/tokens`,
 }
 export const FILE_NAME = {
     RAW_VIDEOS_TXT: 'list.txt',
     SCRIPT_PY_YOUTUBE: 'upload_video.py'
-}   
+}

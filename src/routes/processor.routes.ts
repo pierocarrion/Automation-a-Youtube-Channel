@@ -7,11 +7,15 @@ const router = new Router();
 
 router.post('/processor', async (req,res): Promise<Response> =>{
     try{
-        
-        const result = await processorController.downloadAndUploadVideos()
-        console.log("🚀 ~ file: processor.routes.ts ~ line 12 ~ router.post ~ result", result)
+        const {numberVideos,title,tags,description} = req.body;
+        const result = await processorController.downloadAndUploadVideos({
+            numberVideos,
+            title,
+            tags,
+            description
+        })
 
-        return res.json({success:result});
+        return res.json({success:true});
     }catch(error){
         return res.json({success: false, error: error.stack})
     }

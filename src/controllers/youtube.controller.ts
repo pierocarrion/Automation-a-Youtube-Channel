@@ -1,6 +1,6 @@
 import { ChildProcess } from '../utils/child_process';
-import YoutubeAPI from '../scripts/upload_video'
-import { PATH } from '../utils/constants';
+const Youtube = require( '../scripts/upload_video');
+
 class YoutubeController{
     constructor(){}
     async uploadVideo(titleVideo: string,description: string, keywords: string, category: string,  privacy: string){
@@ -23,8 +23,8 @@ class YoutubeController{
             throw error;
         }
     }
-    async upload(){
-        return YoutubeAPI.uploadVideo(PATH.RESULT_VIDEO+"/result.mp4");
+    async upload(content:any){
+        Youtube(content);
     }
 }
 export default new YoutubeController();

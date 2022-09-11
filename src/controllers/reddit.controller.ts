@@ -26,7 +26,7 @@ class RedditController {
             throw error;
         }
     }
-    async saveUrls(urls: string[]){
+    async saveUrlsOnDatabase(urls: string[]){
         try{
             return new Promise(async (resolve, reject)=>{
                 

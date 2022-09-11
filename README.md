@@ -7,33 +7,17 @@ Youtube Channel
     https://www.youtube.com/channel/UCXe_gDzEW4aSQscv_EZBJVQ
 ```
 
-API - Obtain Video Urls From Reddit
+
+
+
+API - Trigger the Upload Video to Youtube
 ```sh
-    POST: http://localhost:5000/api/v1/reddit/execute
+    POST: http://localhost:5000/api/v1/processor/processor
     BODY:
         {
-	        "topN": 5
-        }
-```
-API - Download Videos
-```sh
-    GET: http://localhost:5000/api/v1/video/download
-```
-
-API - Concat Videos
-```sh
-    GET: http://localhost:5000/api/v1/video/concat
-```
-
-API - Upload Video To Youtube
-```sh
-    POST: http://localhost:5000/api/v1/youtube/upload
-    BODY: 
-        {
-            "titleVideo": "Tiktok Trending",
-            "description":"Tiktok trending",
-            "keywords":"surfing,Santa Cruz",
-            "category":"22",
-            "privacy" :"public"
+	        "numberVideos": 10,
+            "title" :"Video Test",
+            "tags" : "",
+            "description" : "Description"
         }
 ```
