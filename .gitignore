@@ -1,6 +1,3 @@
 node_modules/
-temp/result/*.mp4
-temp/videos/*.mp4
-temp/cut/*.mp4
 src/tokens/client_secrets.json
 src/scripts/upload_video.py-oauth2.json
