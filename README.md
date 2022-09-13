@@ -2,10 +2,15 @@
 
 Development in NodeJs with Typescript that automates the upload of videos to Youtube. These videos are sourced from Reddit and downloaded. With the use of FFmepg, the videos are cut and concatenated to finally be uploaded to YouTube.
 
+Install dependencies
+```sh
+    sudo apt-get install youtube-dl
+    sudo apt-get install ffmpeg
+```
 
 Init Project
 ```sh
-    npm install
+    npm run dev
 ```
 Youtube Channel
 ```sh

@@ -4,8 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon --delay 500ms src/index.ts",
-    "install1": "sudo apt-get install youtube-dl ffmpeg google-api-python-client"
+    "dev": "nodemon --delay 500ms src/index.ts"
   },
   "dependencies": {
     "@types/axios": "^0.14.0",
