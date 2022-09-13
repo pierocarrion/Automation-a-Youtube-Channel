@@ -12,7 +12,7 @@ Init Project
 ```sh
     npm run dev
 ```
-Youtube Channel
+Youtube Channel - Proof of Concept (PoC)
 ```sh
     https://www.youtube.com/channel/UCXe_gDzEW4aSQscv_EZBJVQ
 ```
@@ -23,8 +23,8 @@ API - Trigger the Upload Video to Youtube
     BODY:
         {
             "numberVideos": 10,
-            "title" :"Video Test",
-            "tags" : "",
-            "description" : "Description"
+            "title" :"Video Title",
+            "tags" : "Tags Video",
+            "description" : "Video Description"
         }
 ```
