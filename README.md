@@ -1,4 +1,4 @@
-# Youtube channel automation with NodeJS
+# Automation a Youtube Channel with NodeJS, Google API, FFmepg and Youtube-DL 
 
 Automation in NodeJS with Typescript for uploading videos to Youtube. These videos are sourced from Reddit. Then FFmepg cuts and concat the videos to finally be uploaded to YouTube.
 
